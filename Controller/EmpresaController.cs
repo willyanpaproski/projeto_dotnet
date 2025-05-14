@@ -1,0 +1,108 @@
+using dotnetProject.Dto;
+using dotnetProject.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+
+namespace dotnetProject.Controller;
+
+[ApiController]
+[Route("api/[controller]")]
+public class EmpresaController : ControllerBase
+{
+    private readonly IEmpresa _empresaService;
+
+    private readonly ILogger<EmpresaController> _logger;
+
+    public EmpresaController(ILogger<EmpresaController> logger, IEmpresa empresaService)
+    {
+        _logger = logger;
+        _empresaService = empresaService;
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<EmpresaDTO>>> Get()
+    {
+        try
+        {
+            var empresas = await _empresaService.ListarTodos();
+            return Ok(empresas);
+        }
+        catch (System.Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao consultar empresas");
+            return StatusCode(500, $"Erro ao consultar empresas: ${ex.Message}");
+        }
+    }
+
+    [HttpGet("{Id}")]
+    public async Task<ActionResult<EmpresaDTO?>> GetById(long Id)
+    {
+        try
+        {
+            var empresa = await _empresaService.ObterPorId(Id);
+            if (empresa == null) {
+                return NotFound("Empresa não encontrada");
+            }
+            return Ok(empresa);
+        }
+        catch (System.Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao consultar empresa");
+            return StatusCode(500, $"Erro ao consultar empresa: ${ex.Message}");
+        }
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<EmpresaDTO>> Criar(EmpresaCreateDTO dto)
+    {
+        try
+        {
+            var empresaCriada = await _empresaService.Criar(dto);
+            return CreatedAtAction(nameof(GetById), new { empresaCriada.Id }, empresaCriada);
+        }   
+        catch (System.Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao cadastrar empresa");
+            return StatusCode(500, $"Erro ao cadastrar empresa: ${ex.Message}");
+        }
+    }
+
+    [HttpPut("{Id}")]
+    public async Task<ActionResult<EmpresaDTO?>> Atualizar(long Id, EmpresaDTO dto)
+    {
+        try
+        {
+            var empresaAtualizada = await _empresaService.Atualizar(Id, dto);    
+
+            if (empresaAtualizada == null) {
+                return NotFound("Empresa não encontrada");
+            }    
+
+            return Ok(empresaAtualizada);
+        }
+        catch (System.Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao atualizar empresa");
+            return StatusCode(500, $"Erro ao atualizar empresa: ${ex.Message}");
+        }
+    }
+
+    [HttpDelete("{Id}")]
+    public async Task<IActionResult> Remover(long Id)
+    {
+        try
+        {
+            var empresa = await _empresaService.ObterPorId(Id);
+
+            if (empresa == null) {
+                return NotFound("Empresa não encontrada");
+            }
+
+            return NoContent();
+        }
+        catch (System.Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao deletar empresa");
+            return StatusCode(500, $"Erro ao deletar empresa: ${ex.Message}");
+        }
+    }
+}
