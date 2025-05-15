@@ -111,10 +111,51 @@ public class FilialController : ControllerBase
     }
 
     [HttpPut("{Id}")]
-    public async Task<ActionResult<FilialDTO?>> Atualizar(long Id, FilialDTO dto)
+    public async Task<ActionResult<FilialDTO?>> Atualizar(long Id, [FromBody] FilialRequest request)
     {
         try
         {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState
+                    .Where(x => x.Value?.Errors.Count > 0)
+                    .ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => kvp.Value?.Errors.Select(e => e.ErrorMessage).ToArray()
+                    );
+
+                return BadRequest(new
+                {
+                    Message = "Erros de validação encontrados.",
+                    Errors = errors
+                });
+            }
+
+            var dto = new FilialDTO
+            {
+                Ativo = request.Ativo,
+                Nome = request.Nome,
+                Cnpj = request.Cnpj,
+                Cep = request.Cep,
+                Endereco = request.Endereco,
+                Numero = request.Numero,
+                Rua = request.Rua,
+                Cidade = request.Cidade,
+                Estado = request.Estado,
+                Bairro = request.Bairro,
+                Complemento = request.Complemento,
+                Telefone = request.Telefone,
+                Celular = request.Celular,
+                Email = request.Email,
+                DataAbertura = request.DataAbertura,
+                Cor = request.Cor,
+                NumeroInscricaoEstadual = request.NumeroInscricaoEstadual,
+                NumeroInscricaoMunicipal = request.NumeroInscricaoMunicipal,
+                NumeroAlvara = request.NumeroAlvara,
+                Observacoes = request.Observacoes,
+                EmpresaId = request.EmpresaId
+            };
+
             var filialAtualizada = await _filialService.Atualizar(Id, dto);
 
             if (filialAtualizada == null) {

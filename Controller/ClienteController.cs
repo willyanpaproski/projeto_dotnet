@@ -108,10 +108,47 @@ public class ClienteController : ControllerBase
 
 
     [HttpPut("{Id}")]
-    public async Task<ActionResult<ClienteDTO?>> Atualizar(long Id, ClienteDTO dto)
+    public async Task<ActionResult<ClienteDTO?>> Atualizar(long Id, [FromBody] ClienteRequest request)
     {
         try
         {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState
+                    .Where(x => x.Value.Errors.Count > 0)
+                    .ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                    );
+
+                return BadRequest(new
+                {
+                    Message = "Erros de validação encontrados.",
+                    Errors = errors
+                });
+            }
+
+            var dto = new ClienteDTO
+            {
+                Ativo = request.Ativo,
+                Nome = request.Nome,
+                CpfCnpj = request.CpfCnpj,
+                DataNascimento = request.DataNascimento ?? default,
+                TipoPessoa = request.TipoPessoa,
+                Email = request.Email,
+                Telefone = request.Telefone,
+                Celular = request.Celular,
+                Cep = request.Cep,
+                Endereco = request.Endereco,
+                Cidade = request.Cidade,
+                Bairro = request.Bairro,
+                Estado = request.Estado,
+                Rua = request.Rua,
+                Complemento = request.Complemento,
+                EmpresaId = request.EmpresaId,
+                FilialId = request.FilialId
+            };
+
             var cliente = await _clienteService.ObterPorId(Id);
 
             if (cliente == null) {

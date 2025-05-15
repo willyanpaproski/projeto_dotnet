@@ -105,10 +105,47 @@ public class EmpresaController : ControllerBase
     }
 
     [HttpPut("{Id}")]
-    public async Task<ActionResult<EmpresaDTO?>> Atualizar(long Id, EmpresaDTO dto)
+    public async Task<ActionResult<EmpresaDTO?>> Atualizar(long Id, [FromBody] EmpresaRequest request)
     {
         try
         {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState
+                    .Where(x => x.Value?.Errors.Count > 0)
+                    .ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => kvp.Value?.Errors.Select(e => e.ErrorMessage).ToArray()
+                    );
+
+                return BadRequest(new
+                {
+                    Message = "Erros de validação encontrados.",
+                    Errors = errors
+                });
+            }
+
+            var dto = new EmpresaDTO
+            {
+                Ativo = request.Ativo,
+                RazaoSocial = request.RazaoSocial,
+                NomeFantasia = request.NomeFantasia,
+                DataFundacao = request.DataFundacao,
+                Cnpj = request.Cnpj,
+                Cep = request.Cep,
+                Endereco = request.Endereco,
+                Numero = request.Numero,
+                Cidade = request.Cidade,
+                Bairro = request.Bairro,
+                Rua = request.Rua,
+                Complemento = request.Complemento,
+                Site = request.Site,
+                Email = request.Email,
+                Telefone = request.Telefone,
+                Cor = request.Cor,
+                Observacoes = request.Observacoes
+            };
+
             var empresaAtualizada = await _empresaService.Atualizar(Id, dto);    
 
             if (empresaAtualizada == null) {
