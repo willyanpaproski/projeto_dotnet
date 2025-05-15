@@ -1,5 +1,6 @@
 using dotnetProject.Dto;
 using dotnetProject.Interfaces;
+using dotnetProject.Request;
 using Microsoft.AspNetCore.Mvc;
 
 namespace dotnetProject.Controller;
@@ -52,10 +53,47 @@ public class EmpresaController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<EmpresaDTO>> Criar(EmpresaCreateDTO dto)
+    public async Task<ActionResult<EmpresaDTO>> Criar([FromBody] EmpresaRequest request)
     {
         try
         {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState
+                    .Where(x => x.Value?.Errors.Count > 0)
+                    .ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => kvp.Value?.Errors.Select(e => e.ErrorMessage).ToArray()
+                    );
+
+                return BadRequest(new
+                {
+                    Message = "Erros de validação encontrados.",
+                    Errors = errors
+                });
+            }
+
+            var dto = new EmpresaCreateDTO
+            {
+                Ativo = request.Ativo,
+                RazaoSocial = request.RazaoSocial,
+                NomeFantasia = request.NomeFantasia,
+                DataFundacao = request.DataFundacao,
+                Cnpj = request.Cnpj,
+                Cep = request.Cep,
+                Endereco = request.Endereco,
+                Numero = request.Numero,
+                Cidade = request.Cidade,
+                Bairro = request.Bairro,
+                Rua = request.Rua,
+                Complemento = request.Complemento,
+                Site = request.Site,
+                Email = request.Email,
+                Telefone = request.Telefone,
+                Cor = request.Cor,
+                Observacoes = request.Observacoes
+            };
+
             var empresaCriada = await _empresaService.Criar(dto);
             return CreatedAtAction(nameof(GetById), new { empresaCriada.Id }, empresaCriada);
         }   

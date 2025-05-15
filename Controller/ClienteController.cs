@@ -1,5 +1,6 @@
 using dotnetProject.Dto;
 using dotnetProject.Interfaces;
+using dotnetProject.Request;
 using Microsoft.AspNetCore.Mvc;
 
 namespace dotnetProject.Controller;
@@ -54,19 +55,57 @@ public class ClienteController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<ClienteDTO>> Criar(ClienteCreateDTO dto)
+    public async Task<ActionResult<ClienteDTO>> Criar([FromBody] ClienteRequest request)
     {
         try
         {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState
+                    .Where(x => x.Value.Errors.Count > 0)
+                    .ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                    );
+
+                return BadRequest(new
+                {
+                    Message = "Erros de validação encontrados.",
+                    Errors = errors
+                });
+            }
+
+            var dto = new ClienteCreateDTO
+            {
+                Nome = request.Nome,
+                Ativo = request.Ativo,
+                CpfCnpj = request.CpfCnpj,
+                DataNascimento = request.DataNascimento ?? default,
+                TipoPessoa = request.TipoPessoa,
+                Email = request.Email,
+                Telefone = request.Telefone,
+                Celular = request.Celular,
+                Cep = request.Cep,
+                Endereco = request.Endereco,
+                Cidade = request.Cidade,
+                Bairro = request.Bairro,
+                Estado = request.Estado,
+                Rua = request.Rua,
+                Complemento = request.Complemento,
+                EmpresaId = request.EmpresaId,
+                FilialId = request.FilialId
+            };
+
             var clienteCriado = await _clienteService.Criar(dto);
             return CreatedAtAction(nameof(GetById), new { clienteCriado.Id }, clienteCriado);
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
             _logger.LogError(ex, "Erro ao cadastrar cliente");
-            return StatusCode(500, $"Erro ao cadastrar cliente: ${ex.Message}");
+            return StatusCode(500, $"Erro ao cadastrar cliente: {ex.Message}");
         }
     }
+
 
     [HttpPut("{Id}")]
     public async Task<ActionResult<ClienteDTO?>> Atualizar(long Id, ClienteDTO dto)

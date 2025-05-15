@@ -1,5 +1,6 @@
 using dotnetProject.Dto;
 using dotnetProject.Interfaces;
+using dotnetProject.Request;
 using Microsoft.AspNetCore.Mvc;
 
 namespace dotnetProject.Controller;
@@ -54,10 +55,51 @@ public class FilialController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<FilialDTO>> Criar(FilialCreateDTO dto)
+    public async Task<ActionResult<FilialDTO>> Criar([FromBody] FilialRequest request)
     {
         try
         {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState
+                    .Where(x => x.Value?.Errors.Count > 0)
+                    .ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => kvp.Value?.Errors.Select(e => e.ErrorMessage).ToArray()
+                    );
+
+                return BadRequest(new
+                {
+                    Message = "Erros de validação encontrados.",
+                    Errors = errors
+                });
+            }
+
+            var dto = new FilialCreateDTO
+            {
+                Ativo = request.Ativo,
+                Nome = request.Nome,
+                Cnpj = request.Cnpj,
+                Cep = request.Cep,
+                Endereco = request.Endereco,
+                Numero = request.Numero,
+                Rua = request.Rua,
+                Cidade = request.Cidade,
+                Estado = request.Estado,
+                Bairro = request.Bairro,
+                Complemento = request.Complemento,
+                Telefone = request.Telefone,
+                Celular = request.Celular,
+                Email = request.Email,
+                DataAbertura = request.DataAbertura,
+                Cor = request.Cor,
+                NumeroInscricaoEstadual = request.NumeroInscricaoEstadual,
+                NumeroInscricaoMunicipal = request.NumeroInscricaoMunicipal,
+                NumeroAlvara = request.NumeroAlvara,
+                Observacoes = request.Observacoes,
+                EmpresaId = request.EmpresaId
+            };
+
             var filialCriada = await _filialService.Criar(dto);
             return CreatedAtAction(nameof(GetById), new { filialCriada.Id }, filialCriada);
         }
