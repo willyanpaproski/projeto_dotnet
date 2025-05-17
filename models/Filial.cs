@@ -13,68 +13,68 @@ public class FilialModel : EntidadeBase
     public bool Ativo { get; set; }
 
     [Column("Nome"), NotNull]
-    public string Nome { get; set; }
+    public string? Nome { get; set; }
 
     [Column("Cnpj"), NotNull]
-    public string Cnpj { get; set; }
+    public string? Cnpj { get; set; }
 
     [Column("Cep"), NotNull]
-    public string Cep { get; set; }
+    public string? Cep { get; set; }
 
     [Column("Endereco"), NotNull]
-    public string Endereco { get; set; }
+    public string? Endereco { get; set; }
 
     [Column("Numero"), NotNull]
-    public string Numero { get; set; }
+    public string? Numero { get; set; }
 
     [Column("Rua")]
-    public string Rua { get; set; }
+    public string? Rua { get; set; }
 
     [Column("Cidade")]
-    public string Cidade { get; set; }
+    public string? Cidade { get; set; }
 
     [Column("Estado")]
-    public string Estado { get; set; }
+    public string? Estado { get; set; }
 
     [Column("Bairro")]
-    public string Bairro { get; set; }
+    public string? Bairro { get; set; }
 
     [Column("Complemento")]
-    public string Complemento { get; set; }
+    public string? Complemento { get; set; }
 
     [Column("Telefone")]
-    public string Telefone { get; set; }
+    public string? Telefone { get; set; }
 
     [Column("Celular")]
-    public string Celular { get; set; }
+    public string? Celular { get; set; }
 
     [Column("Email")]
-    public string Email { get; set; }
+    public string? Email { get; set; }
 
     [Column("DataAbertura")]
     public DateOnly DataAbertura { get; set; }
 
     [Column("Cor"), NotNull]
-    public string Cor { get; set; }
+    public string? Cor { get; set; }
 
     [Column("NumeroInscricaoEstadual")]
-    public string NumeroInscricaoEstadual { get; set; }
+    public string? NumeroInscricaoEstadual { get; set; }
 
     [Column("NumeroInscricaoMunicipal")]
-    public string NumeroInscricaoMunicipal { get; set; }
+    public string? NumeroInscricaoMunicipal { get; set; }
 
     [Column("NumeroAlvara")]
-    public string NumeroAlvara { get; set; }
+    public string? NumeroAlvara { get; set; }
 
     [Column("Observacoes")]
-    public string Observacoes { get; set; }
+    public string? Observacoes { get; set; }
 
     [Column("EmpresaId"), NotNull]
-    public long EmpresaId { get; set; }
+    public long? EmpresaId { get; set; }
 
     //Chaves Estrangeiras
     [Association(ThisKey = nameof(EmpresaId), OtherKey = nameof(EmpresaModel.Id), CanBeNull = false)]
-    public EmpresaModel Empresa { get; set; }
+    public EmpresaModel? Empresa { get; set; }
 
     public void CriarModel(FilialCreateDTO dto)
     {

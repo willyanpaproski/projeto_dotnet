@@ -10,11 +10,11 @@ public class ClienteRequest
 
     [Required(AllowEmptyStrings = false, ErrorMessage = "Nome deve ser preenchido!")]
     [StringLength(100, ErrorMessage = "Nome deve ter no máximo 100 caracteres!")]
-    public string Nome { get; set; }
+    public string? Nome { get; set; }
 
     [Required(ErrorMessage = "CPF/CNPJ deve ser preenchido!")]
     [StringLength(14, ErrorMessage = "CPF/CNPJ deve ter no máximo 14 caracteres!")]
-    public string CpfCnpj { get; set; }
+    public string? CpfCnpj { get; set; }
 
     public DateOnly? DataNascimento { get; set; }
 
@@ -32,10 +32,10 @@ public class ClienteRequest
 
     [Required(ErrorMessage = "CEP é obrigatório.")]
     [StringLength(8, ErrorMessage = "CEP deve ter no máximo 8 caracteres!")]
-    public string Cep { get; set; }
+    public string? Cep { get; set; }
 
     [Required(ErrorMessage = "Endereço é obrigatório.")]
-    public string Endereco { get; set; }
+    public string? Endereco { get; set; }
 
     public string? Cidade { get; set; }
     public string? Bairro { get; set; }
@@ -47,5 +47,5 @@ public class ClienteRequest
     public long EmpresaId { get; set; }
 
     [Required(ErrorMessage = "Filial é obrigatório.")]
-    public long FilialId { get; set; }
+    public long? FilialId { get; set; }
 }

@@ -1,7 +1,7 @@
 using dotnetProject.Dto;
 using dotnetProject.Interfaces;
 using dotnetProject.Models;
-using dotnetProject.Repository.RepositorioGenerico;
+using dotnetProject.Repository;
 using LinqToDB.Data;
 
 namespace dotnetProject.Services;
@@ -119,6 +119,11 @@ public class ClienteService : ICliente
         await _repositorio.UpdateAsync(cliente);
 
         var clienteAtualizado = await _repositorio.GetById(Id);
+
+        if (clienteAtualizado == null)
+        {
+            return null;
+        }
 
         return new ClienteDTO
         {

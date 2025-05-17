@@ -1,7 +1,7 @@
 using dotnetProject.Dto;
 using dotnetProject.Interfaces;
 using dotnetProject.Models;
-using dotnetProject.Repository.RepositorioGenerico;
+using dotnetProject.Repository;
 using LinqToDB.Data;
 
 namespace dotnetProject.Services;
@@ -9,10 +9,17 @@ namespace dotnetProject.Services;
 public class FilialService : IFilial
 {
     private readonly RepositorioGenerico<FilialModel> _repositorio;
+    private readonly RepositorioGenerico<ClienteModel> _repositorioGenericoCliente;
+    private readonly ClienteRepository _clienteRepository;
 
-    public FilialService(DataConnection conexao)
+    public FilialService(
+        DataConnection conexao,
+        ClienteRepository clienteRepository
+    )
     {
         _repositorio = new RepositorioGenerico<FilialModel>(conexao);
+        _repositorioGenericoCliente = new RepositorioGenerico<ClienteModel>(conexao);
+        _clienteRepository = clienteRepository;
     }
 
     public async Task<IEnumerable<FilialDTO>> ListarTodos()
@@ -132,7 +139,13 @@ public class FilialService : IFilial
 
         var filialAtualizada = await _repositorio.GetById(Id);
 
-        return new FilialDTO{
+        if (filialAtualizada == null)
+        {
+            return null;
+        }
+
+        return new FilialDTO
+        {
             Id = filialAtualizada.Id,
             Ativo = filialAtualizada.Ativo,
             Nome = filialAtualizada.Nome ?? "",
@@ -166,6 +179,24 @@ public class FilialService : IFilial
 
         if (filialRemover == null) {
             return;
+        }
+
+        var clientesAtivosVinculados = await _clienteRepository.GetClientesAtivosPorFilialId(Id);
+
+        if (clientesAtivosVinculados.Any())
+        {
+            throw new InvalidOperationException("Não é possível deletar uma filial com clientes ativos vinculados");
+        }
+
+        var clientesInativosVinculados = await _clienteRepository.GetClientesInativosPorFilialId(Id);
+
+        if (clientesInativosVinculados.Any())
+        {
+            foreach (var cliente in clientesInativosVinculados)
+            {
+                cliente.FilialId = null;
+                await _repositorioGenericoCliente.UpdateAsync(cliente);
+            }
         }
 
         await _repositorio.DeleteAsync(filialRemover);

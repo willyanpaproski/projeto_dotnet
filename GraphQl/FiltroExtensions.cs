@@ -27,7 +27,7 @@ public static class FiltroExtensions
         this IEnumerable<T> source,
         long? valor,
         FiltroOperador? operador,
-        Func<T, long> selector
+        Func<T, long?> selector
     )
     {   
         if (!valor.HasValue || !operador.HasValue) {
@@ -79,7 +79,8 @@ public static class FiltroExtensions
         return operador switch
         {
             FiltroOperador.Igual => source.Where(x => selector(x).Equals(valor.Value)),
-            FiltroOperador.Diferente => source.Where(x => !selector(x).Equals(valor.Value))
+            FiltroOperador.Diferente => source.Where(x => !selector(x).Equals(valor.Value)),
+            _ => source
         };
     }
 

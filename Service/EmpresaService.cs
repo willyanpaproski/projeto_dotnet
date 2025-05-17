@@ -1,7 +1,7 @@
 using dotnetProject.Dto;
 using dotnetProject.Interfaces;
 using dotnetProject.Models;
-using dotnetProject.Repository.RepositorioGenerico;
+using dotnetProject.Repository;
 using LinqToDB.Data;
 
 namespace dotnetProject.Services;
@@ -9,10 +9,17 @@ namespace dotnetProject.Services;
 public class EmpresaService : IEmpresa
 {
     private readonly RepositorioGenerico<EmpresaModel> _repositorio;
+    private readonly RepositorioGenerico<FilialModel> _repositorioGenericoFilial;
+    private readonly FilialRepository _filialRepository;
 
-    public EmpresaService(DataConnection conexao)
+    public EmpresaService(
+        DataConnection conexao,
+        FilialRepository filialRepository
+    )
     {
         _repositorio = new RepositorioGenerico<EmpresaModel>(conexao);
+        _repositorioGenericoFilial = new RepositorioGenerico<FilialModel>(conexao);
+        _filialRepository = filialRepository;
     }
 
     public async Task<IEnumerable<EmpresaDTO>> ListarTodos()
@@ -120,7 +127,13 @@ public class EmpresaService : IEmpresa
 
         var empresaAtualizada = await _repositorio.GetById(Id);
 
-        return new EmpresaDTO{
+        if (empresaAtualizada == null)
+        {
+            return null;
+        }
+
+        return new EmpresaDTO
+        {
             Id = empresaAtualizada.Id,
             Ativo = empresaAtualizada.Ativo,
             RazaoSocial = empresaAtualizada.RazaoSocial ?? "",
@@ -150,6 +163,23 @@ public class EmpresaService : IEmpresa
 
         if (empresaRemover == null) {
             return;
+        }
+
+        var filiaisAtivasVinculadas = await _filialRepository.GetFiliaisAtivasPorEmpresaId(Id);
+
+        if (filiaisAtivasVinculadas.Any())
+        {
+            throw new InvalidOperationException("Não é possível deletar uma empresa com filiais ativas vinculadas");
+        }
+
+        var filiaisInativasVinculadas = await _filialRepository.GetFiliaisInativasPorEmpresaId(Id);
+
+        if (filiaisInativasVinculadas.Any()) {
+            foreach (var filial in filiaisInativasVinculadas)
+            {
+                filial.EmpresaId = null;
+                await _repositorioGenericoFilial.UpdateAsync(filial);
+            }
         }
 
         await _repositorio.DeleteAsync(empresaRemover);

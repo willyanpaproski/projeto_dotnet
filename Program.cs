@@ -1,9 +1,8 @@
 using dotnetProject.GraphQl;
 using dotnetProject.Interfaces;
-using dotnetProject.Repository.RepositorioGenerico;
+using dotnetProject.Repository;
 using dotnetProject.Services;
 using LinqToDB.Data;
-using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Converters;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Registro de serviços
 builder.Services.AddScoped<DataConnection, LinqToDbDataConnection>();
 builder.Services.AddScoped(typeof(RepositorioGenerico<>), typeof(RepositorioGenerico<>));
+builder.Services.AddScoped<ClienteRepository>();
+builder.Services.AddScoped<FilialRepository>();
 builder.Services.AddScoped<ICliente, ClienteService>();
 builder.Services.AddScoped<IEmpresa, EmpresaService>();
 builder.Services.AddScoped<IFilial, FilialService>();

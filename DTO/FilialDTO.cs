@@ -23,7 +23,7 @@ public record FilialDTO
     public string? NumeroInscricaoMunicipal { get; set; }
     public string? NumeroAlvara { get; set; }
     public string? Observacoes { get; set; }
-    public long EmpresaId { get; set; }
+    public long? EmpresaId { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 }

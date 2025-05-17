@@ -4,7 +4,7 @@ using LinqToDB.Data;
 using System.Linq.Expressions;
 using dotnetProject.Models;
 
-namespace dotnetProject.Repository.RepositorioGenerico;
+namespace dotnetProject.Repository;
 
 public class RepositorioGenerico<T> where T : EntidadeBase
 {

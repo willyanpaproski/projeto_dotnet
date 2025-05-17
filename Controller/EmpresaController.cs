@@ -172,7 +172,13 @@ public class EmpresaController : ControllerBase
                 return NotFound("Empresa não encontrada");
             }
 
+            await _empresaService.Remover(Id);
+
             return NoContent();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ex.Message);
         }
         catch (System.Exception ex)
         {

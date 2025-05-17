@@ -2,3 +2,6 @@
 
 # CS8604: Possível argumento de referência nula.
 dotnet_diagnostic.CS8604.severity = silent
+
+# CS8602: Desreferência de uma referência possivelmente nula.
+dotnet_diagnostic.CS8602.severity = silent

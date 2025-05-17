@@ -178,11 +178,18 @@ public class FilialController : ControllerBase
         {
             var filialRemover = await _filialService.ObterPorId(Id);
 
-            if (filialRemover == null) {
+            if (filialRemover == null)
+            {
                 return NotFound("Filial não encontrada");
             }
 
+            await _filialService.Remover(Id);
+
             return NoContent();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ex.Message);
         }
         catch (System.Exception ex)
         {
