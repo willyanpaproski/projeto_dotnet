@@ -1,5 +1,5 @@
 using dotnetProject.Dto;
-using dotnetProject.Enums.TipoPessoaEnum;
+using dotnetProject.Enums;
 using dotnetProject.Interfaces;
 
 namespace dotnetProject.GraphQl;

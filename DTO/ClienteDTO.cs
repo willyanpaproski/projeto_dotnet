@@ -1,4 +1,4 @@
-using dotnetProject.Enums.TipoPessoaEnum;
+using dotnetProject.Enums;
 
 namespace dotnetProject.Dto;
 

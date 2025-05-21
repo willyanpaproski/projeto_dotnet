@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  dotnet-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dotnet-api
+    ports:
+      - "5250:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development

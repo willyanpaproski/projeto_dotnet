@@ -1,5 +1,5 @@
 using dotnetProject.Dto;
-using dotnetProject.Enums.TipoPessoaEnum;
+using dotnetProject.Enums;
 using LinqToDB.Mapping;
 
 namespace dotnetProject.Models;

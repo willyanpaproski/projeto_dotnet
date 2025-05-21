@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using dotnetProject.Enums.TipoPessoaEnum;
+using dotnetProject.Enums;
+using dotnetProject.Utils;
 
 namespace dotnetProject.Request;
 
@@ -13,29 +14,28 @@ public class ClienteRequest
     public string? Nome { get; set; }
 
     [Required(ErrorMessage = "CPF/CNPJ deve ser preenchido!")]
-    [StringLength(14, ErrorMessage = "CPF/CNPJ deve ter no máximo 14 caracteres!")]
+    [CpfCnpjValidator(ErrorMessage = "CPF/CNPJ deve conter 11 ou 14 caracteres")]
     public string? CpfCnpj { get; set; }
 
     public DateOnly? DataNascimento { get; set; }
 
-    [Required(ErrorMessage = "Tipo de pessoa deve ser informado.")]
+    [Required(ErrorMessage = "Tipo de pessoa deve ser informado!")]
     public TipoPessoaEnum TipoPessoa { get; set; }
 
     [EmailOptional(ErrorMessage = "Email inválido.")]
     public string? Email { get; set; }
 
-    [StringLength(11, ErrorMessage = "Telefone deve ter no máximo 11 caracteres!")]
+    [StringCharacters(11, ErrorMessage = "Telefone deve ter 11 caracteres!")]
     public string? Telefone { get; set; }
 
-    [StringLength(11, ErrorMessage = "Celular deve ter no máximo 11 caracteres!")]
+    [StringCharacters(11, ErrorMessage = "Celular deve ter 11 caracteres!")]
     public string? Celular { get; set; }
 
-    [Required(ErrorMessage = "CEP é obrigatório.")]
-    [MinLength(8, ErrorMessage = "CEP deve ter 8 caracteres!")]
-    [MaxLength(8, ErrorMessage = "CEP deve ter 8 caracteres!")]
+    [Required(ErrorMessage = "CEP deve ser preenchido!")]
+    [StringCharacters(8, ErrorMessage = "CEP deve ter 8 caracteres!")]
     public string? Cep { get; set; }
 
-    [Required(ErrorMessage = "Endereço é obrigatório.")]
+    [Required(ErrorMessage = "Endereço deve ser preenchido!")]
     public string? Endereco { get; set; }
 
     public string? Cidade { get; set; }
@@ -44,9 +44,9 @@ public class ClienteRequest
     public string? Rua { get; set; }
     public string? Complemento { get; set; }
 
-    [Required(ErrorMessage = "Empresa é obrigatório.")]
+    [Required(ErrorMessage = "Empresa deve ser preenchido!")]
     public long? EmpresaId { get; set; }
 
-    [Required(ErrorMessage = "Filial é obrigatório.")]
+    [Required(ErrorMessage = "Filial deve ser preenchido!")]
     public long? FilialId { get; set; }
 }

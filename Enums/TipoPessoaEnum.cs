@@ -1,4 +1,4 @@
-namespace dotnetProject.Enums.TipoPessoaEnum;
+namespace dotnetProject.Enums;
 
 public enum TipoPessoaEnum
 {
