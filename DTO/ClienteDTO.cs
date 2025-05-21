@@ -20,7 +20,7 @@ public record ClienteDTO
     public string? Estado { get; set; }
     public string? Rua { get; set; }
     public string? Complemento { get; set; }
-    public long EmpresaId { get; set; }
+    public long? EmpresaId { get; set; }
     public long? FilialId { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }

@@ -56,7 +56,7 @@ public class ClienteModel : EntidadeBase
     public string? Complemento { get; set; }
     
     [Column("EmpresaId"), NotNull]
-    public long EmpresaId { get; set; }
+    public long? EmpresaId { get; set; }
 
     [Column("FilialId"), NotNull]
     public long? FilialId { get; set; }

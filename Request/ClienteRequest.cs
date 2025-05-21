@@ -21,7 +21,7 @@ public class ClienteRequest
     [Required(ErrorMessage = "Tipo de pessoa deve ser informado.")]
     public TipoPessoaEnum TipoPessoa { get; set; }
 
-    [EmailAddress(ErrorMessage = "Email inválido.")]
+    [EmailOptional(ErrorMessage = "Email inválido.")]
     public string? Email { get; set; }
 
     [StringLength(11, ErrorMessage = "Telefone deve ter no máximo 11 caracteres!")]
@@ -45,7 +45,7 @@ public class ClienteRequest
     public string? Complemento { get; set; }
 
     [Required(ErrorMessage = "Empresa é obrigatório.")]
-    public long EmpresaId { get; set; }
+    public long? EmpresaId { get; set; }
 
     [Required(ErrorMessage = "Filial é obrigatório.")]
     public long? FilialId { get; set; }
