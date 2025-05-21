@@ -31,7 +31,8 @@ public class ClienteRequest
     public string? Celular { get; set; }
 
     [Required(ErrorMessage = "CEP é obrigatório.")]
-    [StringLength(8, ErrorMessage = "CEP deve ter no máximo 8 caracteres!")]
+    [MinLength(8, ErrorMessage = "CEP deve ter 8 caracteres!")]
+    [MaxLength(8, ErrorMessage = "CEP deve ter 8 caracteres!")]
     public string? Cep { get; set; }
 
     [Required(ErrorMessage = "Endereço é obrigatório.")]

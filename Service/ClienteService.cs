@@ -19,7 +19,7 @@ public class ClienteService : ICliente
     {
         var clientes = await _repositorio.Get();
 
-        return clientes.Select(c => new ClienteDTO{
+        return clientes.OrderByDescending(c => c.Id).Select(c => new ClienteDTO{
             Id = c.Id,
             Ativo = c.Ativo,
             Nome = c.Nome ?? "",

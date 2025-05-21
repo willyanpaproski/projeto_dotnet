@@ -26,7 +26,7 @@ public class EmpresaService : IEmpresa
     {
         var empresas = await _repositorio.Get();
 
-        return empresas.Select(e => new EmpresaDTO{
+        return empresas.OrderByDescending(e => e.Id).Select(e => new EmpresaDTO{
             Id = e.Id,
             Ativo = e.Ativo,
             RazaoSocial = e.RazaoSocial ?? "",

@@ -26,7 +26,7 @@ public class FilialService : IFilial
     {
         var filiais = await _repositorio.Get();
 
-        return filiais.Select(f => new FilialDTO{
+        return filiais.OrderByDescending(f => f.Id).Select(f => new FilialDTO{
             Id = f.Id,
             Ativo = f.Ativo,
             Nome = f.Nome ?? "",
