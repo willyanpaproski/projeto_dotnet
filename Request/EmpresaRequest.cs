@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using dotnetProject.Utils;
 
 namespace dotnetProject.Request;
 
@@ -15,14 +16,14 @@ public class EmpresaRequest
     [StringLength(100, ErrorMessage = "Nome Fantasia deve conter no máximo 100 caracteres!")]
     public string? NomeFantasia { get; set; }
 
-    public DateOnly DataFundacao { get; set; }
+    public DateOnly? DataFundacao { get; set; }
 
     [Required(AllowEmptyStrings = false, ErrorMessage = "CNPJ deve ser preenchido!")]
-    [StringLength(14, ErrorMessage = "CNPJ deve conter no máximo 14 caracteres!")]
+    [StringCharacters(14, ErrorMessage = "CNPJ deve ter 14 dígitos!")]
     public string? Cnpj { get; set; }
 
     [Required(AllowEmptyStrings = false, ErrorMessage = "CEP deve ser preenchido!")]
-    [StringLength(8, ErrorMessage = "CEP deve ter no máximo 8 caracteres!")]
+    [StringCharacters(8, ErrorMessage = "CEP deve ter 8 dígitos!")]
     public string? Cep { get; set; }
 
     [Required(AllowEmptyStrings = false, ErrorMessage = "Endereço deve ser preenchido!")]
@@ -38,7 +39,11 @@ public class EmpresaRequest
     public string? Rua { get; set; }
     public string? Complemento { get; set; }
     public string? Site { get; set; }
+
+    [EmailOptional(ErrorMessage = "Email inválido!")]
     public string? Email { get; set; }
+
+    [StringCharacters(11, ErrorMessage = "Telefone deve ter 11 caracteres!")]
     public string? Telefone { get; set; }
 
     [Required(AllowEmptyStrings = false, ErrorMessage = "Cor deve ser preenchido!")]

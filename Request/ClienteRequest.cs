@@ -25,10 +25,10 @@ public class ClienteRequest
     [EmailOptional(ErrorMessage = "Email inválido.")]
     public string? Email { get; set; }
 
-    [StringCharacters(11, ErrorMessage = "Telefone deve ter 11 caracteres!")]
+    [StringCharacters(11, ErrorMessage = "Telefone deve ter 11 dígitos!")]
     public string? Telefone { get; set; }
 
-    [StringCharacters(11, ErrorMessage = "Celular deve ter 11 caracteres!")]
+    [StringCharacters(11, ErrorMessage = "Celular deve ter 11 dígitos!")]
     public string? Celular { get; set; }
 
     [Required(ErrorMessage = "CEP deve ser preenchido!")]

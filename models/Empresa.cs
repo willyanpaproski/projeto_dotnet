@@ -19,7 +19,7 @@ public class EmpresaModel : EntidadeBase
     public string? NomeFantasia { get; set; }
 
     [Column("DataFundacao")]
-    public DateOnly DataFundacao { get; set; }
+    public DateOnly? DataFundacao { get; set; }
 
     [Column("Cnpj"), NotNull]
     public string? Cnpj { get; set; }

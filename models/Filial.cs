@@ -52,7 +52,7 @@ public class FilialModel : EntidadeBase
     public string? Email { get; set; }
 
     [Column("DataAbertura")]
-    public DateOnly DataAbertura { get; set; }
+    public DateOnly? DataAbertura { get; set; }
 
     [Column("Cor"), NotNull]
     public string? Cor { get; set; }

@@ -16,11 +16,11 @@ public record FilialCreateDTO
     public string? Telefone { get; set; }
     public string? Celular { get; set; }
     public string? Email { get; set; }
-    public DateOnly DataAbertura { get; set; }
+    public DateOnly? DataAbertura { get; set; }
     public string? Cor { get; set; }
     public string? NumeroInscricaoEstadual { get; set; }
     public string? NumeroInscricaoMunicipal { get; set; }
     public string? NumeroAlvara { get; set; }
     public string? Observacoes { get; set; }
-    public long EmpresaId { get; set; }
+    public long? EmpresaId { get; set; }
 }

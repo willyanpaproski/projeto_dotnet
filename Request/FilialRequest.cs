@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using dotnetProject.Utils;
 
 namespace dotnetProject.Request;
 
@@ -12,11 +13,11 @@ public class FilialRequest
     public string? Nome { get; set; }
 
     [Required(AllowEmptyStrings = false, ErrorMessage = "CNPJ deve ser preenchido!")]
-    [StringLength(14, ErrorMessage = "CNPJ deve ter no máximo 14 caracteres!")]
+    [StringCharacters(14, ErrorMessage = "CNPJ deve ter 14 dígitos!")]
     public string? Cnpj { get; set; }
 
     [Required(AllowEmptyStrings = false, ErrorMessage = "CEP deve ser preenchido!")]
-    [StringLength(8, ErrorMessage = "CEP deve ter no máximo 8 caracteres")]
+    [StringCharacters(8, ErrorMessage = "CEP deve ter 8 caracteres!")]
     public string? Cep { get; set; }
 
     [Required(AllowEmptyStrings = false, ErrorMessage = "Endereço deve ser preenchido!")]
@@ -32,10 +33,16 @@ public class FilialRequest
     public string? Estado { get; set; }
     public string? Bairro { get; set; }
     public string? Complemento { get; set; }
+
+    [StringCharacters(11, ErrorMessage = "Telefone deve ter 11 dígitos!")]
     public string? Telefone { get; set; }
+
+    [StringCharacters(11, ErrorMessage = "Celular deve ter 11 dígitos!")]
     public string? Celular { get; set; }
+
+    [EmailOptional(ErrorMessage = "Email inválido!")]
     public string? Email { get; set; }
-    public DateOnly DataAbertura { get; set; }
+    public DateOnly? DataAbertura { get; set; }
 
     [Required(AllowEmptyStrings = false, ErrorMessage = "Cor deve ser preenchido!")]
     public string? Cor { get; set; }
@@ -44,5 +51,5 @@ public class FilialRequest
     public string? NumeroInscricaoMunicipal { get; set; }
     public string? NumeroAlvara { get; set; }
     public string? Observacoes { get; set; }
-    public long EmpresaId { get; set; }
+    public long? EmpresaId { get; set; }
 }

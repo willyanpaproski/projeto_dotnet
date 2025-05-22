@@ -5,7 +5,7 @@ public record EmpresaCreateDTO
     public bool Ativo { get; set; }
     public string? RazaoSocial { get; set; }
     public string? NomeFantasia { get; set; }
-    public DateOnly DataFundacao { get; set; }
+    public DateOnly? DataFundacao { get; set; }
     public string? Cnpj { get; set; }
     public string? Cep { get; set; }
     public string? Endereco { get; set; }

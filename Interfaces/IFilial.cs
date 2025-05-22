@@ -9,4 +9,5 @@ public interface IFilial
     Task<FilialDTO> Criar(FilialCreateDTO filial);
     Task<FilialDTO?> Atualizar(long Id, FilialDTO filial);
     Task Remover(long Id);
+    Task<IEnumerable<FilialDTO>> GetFiliaisComEmpresa();
 }

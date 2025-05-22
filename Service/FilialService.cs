@@ -10,23 +10,27 @@ public class FilialService : IFilial
 {
     private readonly RepositorioGenerico<FilialModel> _repositorio;
     private readonly RepositorioGenerico<ClienteModel> _repositorioGenericoCliente;
+    private readonly FilialRepository _filialRepository;
     private readonly ClienteRepository _clienteRepository;
 
     public FilialService(
         DataConnection conexao,
-        ClienteRepository clienteRepository
+        ClienteRepository clienteRepository,
+        FilialRepository filialRepository
     )
     {
         _repositorio = new RepositorioGenerico<FilialModel>(conexao);
         _repositorioGenericoCliente = new RepositorioGenerico<ClienteModel>(conexao);
         _clienteRepository = clienteRepository;
+        _filialRepository = filialRepository;
     }
 
     public async Task<IEnumerable<FilialDTO>> ListarTodos()
     {
         var filiais = await _repositorio.Get();
 
-        return filiais.OrderByDescending(f => f.Id).Select(f => new FilialDTO{
+        return filiais.OrderByDescending(f => f.Id).Select(f => new FilialDTO
+        {
             Id = f.Id,
             Ativo = f.Ativo,
             Nome = f.Nome ?? "",
@@ -58,11 +62,13 @@ public class FilialService : IFilial
     {
         var filial = await _repositorio.GetById(Id);
 
-        if (filial == null) {
+        if (filial == null)
+        {
             return null;
         }
 
-        return new FilialDTO{
+        return new FilialDTO
+        {
             Id = filial.Id,
             Ativo = filial.Ativo,
             Nome = filial.Nome ?? "",
@@ -97,7 +103,8 @@ public class FilialService : IFilial
 
         var filialCriada = await _repositorio.CreateAsync(filial);
 
-        return new FilialDTO{
+        return new FilialDTO
+        {
             Id = filialCriada.Id,
             Ativo = filialCriada.Ativo,
             Nome = filialCriada.Nome ?? "",
@@ -129,7 +136,8 @@ public class FilialService : IFilial
     {
         var filial = await _repositorio.GetById(Id);
 
-        if (filial == null) {
+        if (filial == null)
+        {
             return null;
         }
 
@@ -177,7 +185,8 @@ public class FilialService : IFilial
     {
         var filialRemover = await _repositorio.GetById(Id);
 
-        if (filialRemover == null) {
+        if (filialRemover == null)
+        {
             return;
         }
 
@@ -200,5 +209,12 @@ public class FilialService : IFilial
         }
 
         await _repositorio.DeleteAsync(filialRemover);
+    }
+
+    public async Task<IEnumerable<FilialDTO>> GetFiliaisComEmpresa()
+    {
+        var filiais = await _filialRepository.GetFiliaisComEmpresa();
+
+        return filiais.OrderByDescending(f => f.Id);
     }
 }

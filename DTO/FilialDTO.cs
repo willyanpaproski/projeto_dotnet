@@ -1,3 +1,5 @@
+using dotnetProject.Models;
+
 namespace dotnetProject.Dto;
 
 public record FilialDTO
@@ -17,7 +19,7 @@ public record FilialDTO
     public string? Telefone { get; set; }
     public string? Celular { get; set; }
     public string? Email { get; set; }
-    public DateOnly DataAbertura { get; set; }
+    public DateOnly? DataAbertura { get; set; }
     public string? Cor { get; set; }
     public string? NumeroInscricaoEstadual { get; set; }
     public string? NumeroInscricaoMunicipal { get; set; }
@@ -26,4 +28,6 @@ public record FilialDTO
     public long? EmpresaId { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
+    public FilialModel Filial { get; set; }
+    public EmpresaModel? Empresa { get; set; }
 }
