@@ -19,6 +19,8 @@ public static class FiltroExtensions
             FiltroOperador.Diferente => source.Where(x => selector(x)?.Equals(valor, StringComparison.OrdinalIgnoreCase) != true),
             FiltroOperador.Contem => source.Where(x => selector(x)?.Contains(valor, StringComparison.OrdinalIgnoreCase) == true),
             FiltroOperador.NaoContem => source.Where(x => selector(x)?.Contains(valor, StringComparison.OrdinalIgnoreCase) != true),
+            FiltroOperador.ComecaCom => source.Where(x => selector(x)?.StartsWith(valor, StringComparison.OrdinalIgnoreCase) == true),
+            FiltroOperador.TerminaCom => source.Where(x => selector(x)?.EndsWith(valor, StringComparison.OrdinalIgnoreCase) == true),
             _ => source
         };
     }

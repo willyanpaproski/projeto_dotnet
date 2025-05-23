@@ -7,5 +7,7 @@ public enum FiltroOperador
     MaiorQue,
     MenorQue,
     MaiorIgual,
-    MenorIgual
+    MenorIgual,
+    ComecaCom,
+    TerminaCom
 }
