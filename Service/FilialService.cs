@@ -12,17 +12,20 @@ public class FilialService : IFilial
     private readonly RepositorioGenerico<ClienteModel> _repositorioGenericoCliente;
     private readonly FilialRepository _filialRepository;
     private readonly ClienteRepository _clienteRepository;
+    public LogService _logService;
 
     public FilialService(
         DataConnection conexao,
         ClienteRepository clienteRepository,
-        FilialRepository filialRepository
+        FilialRepository filialRepository,
+        LogService logService
     )
     {
         _repositorio = new RepositorioGenerico<FilialModel>(conexao);
         _repositorioGenericoCliente = new RepositorioGenerico<ClienteModel>(conexao);
         _clienteRepository = clienteRepository;
         _filialRepository = filialRepository;
+        _logService = logService;
     }
 
     public async Task<IEnumerable<FilialDTO>> ListarTodos()
@@ -103,9 +106,9 @@ public class FilialService : IFilial
 
         var filialCriada = await _repositorio.CreateAsync(filial);
 
-        return new FilialDTO
+        var retornoDto = new FilialDTO
         {
-            Id = filialCriada.Id,
+Id = filialCriada.Id,
             Ativo = filialCriada.Ativo,
             Nome = filialCriada.Nome ?? "",
             Cnpj = filialCriada.Cnpj ?? "",
@@ -130,6 +133,16 @@ public class FilialService : IFilial
             CreatedAt = filialCriada.CreatedAt,
             UpdatedAt = filialCriada.UpdatedAt
         };
+
+        await _logService.Criar(new LogCreateDTO
+        {
+            Tabela = "Filial",
+            TipoLog = TipoLogEnum.Cadastro,
+            Usuario = "teste",
+            Campos = retornoDto.ToString()
+        });
+
+        return retornoDto;
     }
 
     public async Task<FilialDTO?> Atualizar(long Id, FilialDTO dto)
@@ -152,7 +165,7 @@ public class FilialService : IFilial
             return null;
         }
 
-        return new FilialDTO
+        var retornoDto = new FilialDTO
         {
             Id = filialAtualizada.Id,
             Ativo = filialAtualizada.Ativo,
@@ -179,6 +192,16 @@ public class FilialService : IFilial
             CreatedAt = filialAtualizada.CreatedAt,
             UpdatedAt = filialAtualizada.UpdatedAt
         };
+
+        await _logService.Criar(new LogCreateDTO
+        {
+            Tabela = "Filial",
+            TipoLog = TipoLogEnum.Atualizacao,
+            Usuario = "teste",
+            Campos = retornoDto.ToString()
+        });
+
+        return retornoDto;
     }
 
     public async Task Remover(long Id)
@@ -189,6 +212,34 @@ public class FilialService : IFilial
         {
             return;
         }
+
+        var dto = new FilialDTO
+        {
+            Id = filialRemover.Id,
+            Ativo = filialRemover.Ativo,
+            Nome = filialRemover.Nome ?? "",
+            Cnpj = filialRemover.Cnpj ?? "",
+            Cep = filialRemover.Cep ?? "",
+            Endereco = filialRemover.Endereco ?? "",
+            Numero = filialRemover.Numero ?? "",
+            Rua = filialRemover.Rua ?? "",
+            Cidade = filialRemover.Cidade ?? "",
+            Estado = filialRemover.Estado ?? "",
+            Bairro = filialRemover.Bairro ?? "",
+            Complemento = filialRemover.Complemento ?? "",
+            Telefone = filialRemover.Telefone ?? "",
+            Celular = filialRemover.Celular ?? "",
+            Email = filialRemover.Email ?? "",
+            DataAbertura = filialRemover.DataAbertura,
+            Cor = filialRemover.Cor ?? "",
+            NumeroInscricaoEstadual = filialRemover.NumeroInscricaoEstadual ?? "",
+            NumeroInscricaoMunicipal = filialRemover.NumeroInscricaoMunicipal ?? "",
+            NumeroAlvara = filialRemover.NumeroAlvara ?? "",
+            Observacoes = filialRemover.Observacoes ?? "",
+            EmpresaId = filialRemover.EmpresaId,
+            CreatedAt = filialRemover.CreatedAt,
+            UpdatedAt = filialRemover.UpdatedAt
+        };
 
         var clientesAtivosVinculados = await _clienteRepository.GetClientesAtivosPorFilialId(Id);
 
@@ -207,6 +258,14 @@ public class FilialService : IFilial
                 await _repositorioGenericoCliente.UpdateAsync(cliente);
             }
         }
+
+        await _logService.Criar(new LogCreateDTO
+        {
+            Tabela = "Filial",
+            TipoLog = TipoLogEnum.Deletou,
+            Usuario = "teste",
+            Campos = dto.ToString()
+        });
 
         await _repositorio.DeleteAsync(filialRemover);
     }

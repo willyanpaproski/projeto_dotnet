@@ -11,15 +11,18 @@ public class EmpresaService : IEmpresa
     private readonly RepositorioGenerico<EmpresaModel> _repositorio;
     private readonly RepositorioGenerico<FilialModel> _repositorioGenericoFilial;
     private readonly FilialRepository _filialRepository;
+    public LogService _logService;
 
     public EmpresaService(
         DataConnection conexao,
-        FilialRepository filialRepository
+        FilialRepository filialRepository,
+        LogService logService
     )
     {
         _repositorio = new RepositorioGenerico<EmpresaModel>(conexao);
         _repositorioGenericoFilial = new RepositorioGenerico<FilialModel>(conexao);
         _filialRepository = filialRepository;
+        _logService = logService;
     }
 
     public async Task<IEnumerable<EmpresaDTO>> ListarTodos()
@@ -89,8 +92,9 @@ public class EmpresaService : IEmpresa
 
         var empresaCriada = await _repositorio.CreateAsync(empresa);
 
-        return new EmpresaDTO{
-            Id = empresaCriada.Id,
+        var retornoDto = new EmpresaDTO
+        {
+Id = empresaCriada.Id,
             Ativo = empresaCriada.Ativo,
             RazaoSocial = empresaCriada.RazaoSocial ?? "",
             NomeFantasia = empresaCriada.NomeFantasia ?? "",
@@ -111,6 +115,16 @@ public class EmpresaService : IEmpresa
             CreatedAt = empresaCriada.CreatedAt,
             UpdatedAt = empresaCriada.UpdatedAt
         };
+
+        await _logService.Criar(new LogCreateDTO
+        {
+            Tabela = "Empresa",
+            TipoLog = TipoLogEnum.Cadastro,
+            Usuario = "Teste",
+            Campos = retornoDto.ToString()
+        });
+
+        return retornoDto;
     }
 
     public async Task<EmpresaDTO?> Atualizar(long Id, EmpresaDTO dto)
@@ -132,7 +146,7 @@ public class EmpresaService : IEmpresa
             return null;
         }
 
-        return new EmpresaDTO
+        var retornoDto = new EmpresaDTO
         {
             Id = empresaAtualizada.Id,
             Ativo = empresaAtualizada.Ativo,
@@ -155,6 +169,16 @@ public class EmpresaService : IEmpresa
             CreatedAt = empresaAtualizada.CreatedAt,
             UpdatedAt = empresaAtualizada.UpdatedAt
         };
+
+        await _logService.Criar(new LogCreateDTO
+        {
+            Tabela = "Empresa",
+            TipoLog = TipoLogEnum.Atualizacao,
+            Usuario = "teste",
+            Campos = retornoDto.ToString()
+        });
+
+        return retornoDto;
     }
 
     public async Task Remover(long Id) 
@@ -164,6 +188,30 @@ public class EmpresaService : IEmpresa
         if (empresaRemover == null) {
             return;
         }
+
+        var dto = new EmpresaDTO
+        {
+            Id = empresaRemover.Id,
+            Ativo = empresaRemover.Ativo,
+            RazaoSocial = empresaRemover.RazaoSocial ?? "",
+            NomeFantasia = empresaRemover.NomeFantasia ?? "",
+            DataFundacao = empresaRemover.DataFundacao,
+            Cnpj = empresaRemover.Cnpj ?? "",
+            Cep = empresaRemover.Cep ?? "",
+            Endereco = empresaRemover.Endereco ?? "",
+            Numero = empresaRemover.Numero ?? "",
+            Cidade = empresaRemover.Cidade ?? "",
+            Bairro = empresaRemover.Bairro ?? "",
+            Rua = empresaRemover.Rua ?? "",
+            Complemento = empresaRemover.Complemento ?? "",
+            Site = empresaRemover.Site ?? "",
+            Email = empresaRemover.Email ?? "",
+            Telefone = empresaRemover.Telefone ?? "",
+            Cor = empresaRemover.Cor ?? "",
+            Observacoes = empresaRemover.Observacoes ?? "",
+            CreatedAt = empresaRemover.CreatedAt,
+            UpdatedAt = empresaRemover.UpdatedAt
+        };
 
         var filiaisAtivasVinculadas = await _filialRepository.GetFiliaisAtivasPorEmpresaId(Id);
 
@@ -181,6 +229,14 @@ public class EmpresaService : IEmpresa
                 await _repositorioGenericoFilial.UpdateAsync(filial);
             }
         }
+
+        await _logService.Criar(new LogCreateDTO
+        {
+            Tabela = "Empresa",
+            TipoLog = TipoLogEnum.Deletou,
+            Usuario = "teste",
+            Campos = dto.ToString()
+        });
 
         await _repositorio.DeleteAsync(empresaRemover);
     }

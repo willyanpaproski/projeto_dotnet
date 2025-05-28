@@ -9,10 +9,12 @@ namespace dotnetProject.Services;
 public class ClienteService : ICliente
 {
     private readonly RepositorioGenerico<ClienteModel> _repositorio;
+    public LogService _logService;
 
-    public ClienteService(DataConnection conexao)
+    public ClienteService(DataConnection conexao, LogService logService)
     {
         _repositorio = new RepositorioGenerico<ClienteModel>(conexao);
+        _logService = logService;
     }
 
     public async Task<IEnumerable<ClienteDTO>> ListarTodos()
@@ -81,8 +83,9 @@ public class ClienteService : ICliente
         cliente.CriarModel(dto);
 
         var clienteCriado = await _repositorio.CreateAsync(cliente);
-
-        return new ClienteDTO{
+        
+        var retornoDto = new ClienteDTO
+        {
             Id = clienteCriado.Id,
             Ativo = clienteCriado.Ativo,
             Nome = clienteCriado.Nome ?? "",
@@ -104,6 +107,16 @@ public class ClienteService : ICliente
             CreatedAt = clienteCriado.CreatedAt,
             UpdatedAt = clienteCriado.UpdatedAt
         };
+
+        await _logService.Criar(new LogCreateDTO
+        {
+            Tabela = "Cliente",
+            TipoLog = TipoLogEnum.Cadastro,
+            Usuario = "teste",
+            Campos = retornoDto.ToString()
+        });
+
+        return retornoDto;
     }
 
     public async Task<ClienteDTO?> Atualizar(long Id, ClienteDTO dto)
@@ -125,7 +138,7 @@ public class ClienteService : ICliente
             return null;
         }
 
-        return new ClienteDTO
+        var retornoDto = new ClienteDTO
         {
             Id = clienteAtualizado.Id,
             Ativo = clienteAtualizado.Ativo,
@@ -148,6 +161,16 @@ public class ClienteService : ICliente
             CreatedAt = clienteAtualizado.CreatedAt,
             UpdatedAt = clienteAtualizado.UpdatedAt
         };
+
+        await _logService.Criar(new LogCreateDTO
+        {
+            Tabela = "Cliente",
+            TipoLog = TipoLogEnum.Atualizacao,
+            Usuario = "Teste",
+            Campos = retornoDto.ToString()
+        });
+
+        return retornoDto;
     }
 
     public async Task Remover(long Id)
@@ -157,6 +180,38 @@ public class ClienteService : ICliente
         if (clienteRemover == null) {
             return;
         }
+
+        var dto = new ClienteDTO
+        {
+            Id = clienteRemover.Id,
+            Ativo = clienteRemover.Ativo,
+            Nome = clienteRemover.Nome ?? "",
+            CpfCnpj = clienteRemover.CpfCnpj ?? "",
+            DataNascimento = clienteRemover.DataNascimento,
+            TipoPessoa = clienteRemover.TipoPessoa,
+            Email = clienteRemover.Email ?? "",
+            Telefone = clienteRemover.Telefone ?? "",
+            Celular = clienteRemover.Celular ?? "",
+            Cep = clienteRemover.Cep ?? "",
+            Endereco = clienteRemover.Endereco ?? "",
+            Cidade = clienteRemover.Cidade ?? "",
+            Bairro = clienteRemover.Bairro ?? "",
+            Estado = clienteRemover.Estado ?? "",
+            Rua = clienteRemover.Rua ?? "",
+            Complemento = clienteRemover.Complemento ?? "",
+            EmpresaId = clienteRemover.EmpresaId,
+            FilialId = clienteRemover.FilialId,
+            CreatedAt = clienteRemover.CreatedAt,
+            UpdatedAt = clienteRemover.UpdatedAt
+        };
+
+        await _logService.Criar(new LogCreateDTO
+        {
+            Tabela = "Cliente",
+            TipoLog = TipoLogEnum.Deletou,
+            Usuario = "Teste",
+            Campos = dto.ToString()
+        });
 
         await _repositorio.DeleteAsync(clienteRemover);
     }
