@@ -17,6 +17,7 @@ builder.Services.AddScoped<IEmpresa, EmpresaService>();
 builder.Services.AddScoped<IFilial, FilialService>();
 builder.Services.AddScoped<ILog, LogService>();
 builder.Services.AddScoped<LogService>();
+builder.Services.AddScoped<IUsuario, UsuarioService>();
 
 // Configuração CORS
 builder.Services.AddCors(options =>

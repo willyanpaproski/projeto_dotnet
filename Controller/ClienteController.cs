@@ -9,7 +9,6 @@ namespace dotnetProject.Controller;
 [Route("api/[controller]")]
 public class ClienteController : ControllerBase
 {
-
     private readonly ICliente _clienteService;
 
     private readonly ILogger<ClienteController> _logger;
@@ -128,6 +127,12 @@ public class ClienteController : ControllerBase
                 });
             }
 
+            var cliente = await _clienteService.ObterPorId(Id);
+
+            if (cliente == null) {
+                return NotFound("Cliente não encontrado!");
+            }
+
             var dto = new ClienteDTO
             {
                 Ativo = request.Ativo,
@@ -148,12 +153,6 @@ public class ClienteController : ControllerBase
                 EmpresaId = request.EmpresaId,
                 FilialId = request.FilialId
             };
-
-            var cliente = await _clienteService.ObterPorId(Id);
-
-            if (cliente == null) {
-                return NotFound("Cliente não encontrado!");
-            }
 
             var clienteAtualizado = await _clienteService.Atualizar(Id, dto);
 

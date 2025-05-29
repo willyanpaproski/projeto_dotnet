@@ -159,6 +159,7 @@
     </None>
   </ItemGroup>
   <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <Import Project="$(NuGetPackageRoot)microsoft.entityframeworkcore\9.0.5\buildTransitive\net8.0\Microsoft.EntityFrameworkCore.props" Condition="Exists('$(NuGetPackageRoot)microsoft.entityframeworkcore\9.0.5\buildTransitive\net8.0\Microsoft.EntityFrameworkCore.props')" />
     <Import Project="$(NuGetPackageRoot)linq2db.sqlserver\5.4.1\build\linq2db.SqlServer.props" Condition="Exists('$(NuGetPackageRoot)linq2db.sqlserver\5.4.1\build\linq2db.SqlServer.props')" />
     <Import Project="$(NuGetPackageRoot)hotchocolate.data\15.1.3\build\HotChocolate.Data.props" Condition="Exists('$(NuGetPackageRoot)hotchocolate.data\15.1.3\build\HotChocolate.Data.props')" />
     <Import Project="$(NuGetPackageRoot)hotchocolate.aspnetcore\15.1.3\build\HotChocolate.AspNetCore.props" Condition="Exists('$(NuGetPackageRoot)hotchocolate.aspnetcore\15.1.3\build\HotChocolate.AspNetCore.props')" />
