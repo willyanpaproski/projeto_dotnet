@@ -1,4 +1,5 @@
 using dotnetProject.Dto;
+using dotnetProject.Models;
 using dotnetProject.Request;
 
 namespace dotnetProject.Interfaces;
@@ -10,5 +11,6 @@ public interface IUsuario
     Task<UsuarioDTO> Criar(UsuarioCreateDTO usuario);
     Task<UsuarioDTO?> Atualizar(long Id, UsuarioDTO usuario);
     Task Remover(long Id);
-    Task<UsuarioDTO?> LoginAsync(UsuarioLoginRequest usuario);
+    Task<string?> LoginAsync(UsuarioLoginRequest usuario);
+    string GerarToken(UsuarioModel usuario);
 }

@@ -1,13 +1,16 @@
+using System.Text;
 using dotnetProject.GraphQl;
 using dotnetProject.Interfaces;
 using dotnetProject.Repository;
 using dotnetProject.Services;
 using LinqToDB.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Converters;
 
 var builder = WebApplication.CreateBuilder(args);
+var secretKey = builder.Configuration["JwtSettings:SecretKey"];
 
-// Registro de serviços
 builder.Services.AddScoped<DataConnection, LinqToDbDataConnection>();
 builder.Services.AddScoped(typeof(RepositorioGenerico<>), typeof(RepositorioGenerico<>));
 builder.Services.AddScoped<ClienteRepository>();
@@ -19,7 +22,6 @@ builder.Services.AddScoped<ILog, LogService>();
 builder.Services.AddScoped<LogService>();
 builder.Services.AddScoped<IUsuario, UsuarioService>();
 
-// Configuração CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp", policy =>
@@ -30,28 +32,43 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Queries do GraphQL
 builder.Services
     .AddGraphQLServer()
     .AddQueryType<QueryRegister>();
 
-// Adiciona controllers com suporte a Newtonsoft.Json
 builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>
     {
         options.SerializerSettings.Converters.Add(new StringEnumConverter());
     });
 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+    };
+});
+
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
-// Configuração CORS
 app.UseCors("AllowAngularApp");
 
 app.UseHttpsRedirection();
 app.UseRouting();
 
-// Usando o GraphQL
-app.MapGraphQL(); // Mapeia o GraphQL para o endpoint /graphql
-app.MapControllers(); // Mapeia os endpoints dos controllers
+app.MapGraphQL();
+app.MapControllers();
 
 app.Run();

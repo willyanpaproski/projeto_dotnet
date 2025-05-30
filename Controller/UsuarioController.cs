@@ -194,7 +194,7 @@ public class UsuarioController : ControllerBase
             return Ok(new
             {
                 Message = "Login realizado com sucesso!",
-                Usuario = usuario
+                Token = usuario
             });
         }
         catch (Exception ex)

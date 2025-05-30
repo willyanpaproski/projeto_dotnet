@@ -1,3 +1,6 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using BCrypt.Net;
 using dotnetProject.Dto;
 using dotnetProject.Interfaces;
@@ -5,6 +8,7 @@ using dotnetProject.Models;
 using dotnetProject.Repository;
 using dotnetProject.Request;
 using LinqToDB.Data;
+using Microsoft.IdentityModel.Tokens;
 
 namespace dotnetProject.Services;
 
@@ -147,13 +151,19 @@ public class UsuarioService : IUsuario
         await _repositorio.DeleteAsync(usuarioRemover);
     }
 
-    public async Task<UsuarioDTO?> LoginAsync(UsuarioLoginRequest request)
+    public async Task<string?> LoginAsync(UsuarioLoginRequest request)
     {
         var usuarios = await _repositorio.Get(q => q.Where(u => u.Email == request.Email));
         var usuario = usuarios.FirstOrDefault();
+
+        if (usuario == null || usuario.Ativo == false)
+        {
+            return null;
+        }
+
         bool senhaValida = BCrypt.Net.BCrypt.Verify(request.Senha, usuario.SenhaHash);
 
-        if (usuario == null || !senhaValida)
+        if (!senhaValida)
         {
             return null;
         }
@@ -162,12 +172,27 @@ public class UsuarioService : IUsuario
 
         await _repositorio.UpdateAsync(usuario);
 
-        return new UsuarioDTO
+        return GerarToken(usuario);
+    }
+
+    public string GerarToken(UsuarioModel usuario)
+    {
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("0q6Thorj6d4srGXRNDA5JNDjyhWF5wUR"));
+
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+        var claims = new[]
         {
-            Id = usuario.Id,
-            Ativo = usuario.Ativo,
-            Email = usuario.Email,
-            LastLoggedIn = usuario.LastLoggedIn
+            new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
+            new Claim(ClaimTypes.Email, usuario.Email)
         };
+
+        var token = new JwtSecurityToken(
+            claims: claims,
+            expires: DateTime.UtcNow.AddHours(1),
+            signingCredentials: creds
+        );
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }

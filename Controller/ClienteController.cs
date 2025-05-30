@@ -1,6 +1,7 @@
 using dotnetProject.Dto;
 using dotnetProject.Interfaces;
 using dotnetProject.Request;
+using HotChocolate.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace dotnetProject.Controller;
@@ -106,6 +107,7 @@ public class ClienteController : ControllerBase
     }
 
 
+    [Authorize]
     [HttpPut("{Id}")]
     public async Task<ActionResult<ClienteDTO?>> Atualizar(long Id, [FromBody] ClienteRequest request)
     {
