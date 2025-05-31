@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Text;
 using dotnetProject.GraphQl;
 using dotnetProject.Interfaces;
@@ -55,7 +56,8 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = false,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
+        NameClaimType = ClaimTypes.Name
     };
 });
 
@@ -67,6 +69,9 @@ app.UseCors("AllowAngularApp");
 
 app.UseHttpsRedirection();
 app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapGraphQL();
 app.MapControllers();

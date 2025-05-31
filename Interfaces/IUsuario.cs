@@ -11,6 +11,6 @@ public interface IUsuario
     Task<UsuarioDTO> Criar(UsuarioCreateDTO usuario);
     Task<UsuarioDTO?> Atualizar(long Id, UsuarioDTO usuario);
     Task Remover(long Id);
-    Task<string?> LoginAsync(UsuarioLoginRequest usuario);
+    Task<(string? Token, UsuarioDTO? Usuario)> LoginAsync(UsuarioLoginRequest usuario);
     string GerarToken(UsuarioModel usuario);
 }

@@ -13,6 +13,8 @@ public class UsuarioQuery
         FiltroOperador? ativoOperador = null,
         string? email = null,
         FiltroOperador? emailOperador = null,
+        string? nomeUsuario = null,
+        FiltroOperador? nomeUsuarioOperador = null,
         string? lastLoggedIn = null,
         FiltroOperador? lastLoggedInOperador = null,
         string? createdAt = null,
@@ -29,6 +31,7 @@ public class UsuarioQuery
             .FiltrarLong(id, idOperador, u => u.Id)
             .FiltrarBool(ativo, ativoOperador, u => u.Ativo)
             .FiltrarString(email, emailOperador, u => u.Email)
+            .FiltrarString(nomeUsuario, nomeUsuarioOperador, u => u.NomeUsuario)
             .FiltrarDateTime(lastLoggedIn, lastLoggedInOperador, u => u.LastLoggedIn)
             .FiltrarDateTime(createdAt, createdAtOperador, u => u.CreatedAt)
             .FiltrarDateTime(updatedAt, updatedAtOperador, u => u.UpdatedAt);

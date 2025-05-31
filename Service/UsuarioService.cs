@@ -1,7 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using BCrypt.Net;
 using dotnetProject.Dto;
 using dotnetProject.Interfaces;
 using dotnetProject.Models;
@@ -32,6 +31,7 @@ public class UsuarioService : IUsuario
             Id = u.Id,
             Ativo = u.Ativo,
             Email = u.Email ?? "",
+            NomeUsuario = u.NomeUsuario ?? "",
             SenhaHash = u.SenhaHash ?? "",
             LastLoggedIn = u.LastLoggedIn,
             CreatedAt = u.CreatedAt,
@@ -53,6 +53,7 @@ public class UsuarioService : IUsuario
             Id = usuario.Id,
             Ativo = usuario.Ativo,
             Email = usuario.Email,
+            NomeUsuario = usuario.NomeUsuario,
             SenhaHash = usuario.SenhaHash,
             LastLoggedIn = usuario.LastLoggedIn
         };
@@ -73,6 +74,7 @@ public class UsuarioService : IUsuario
             Id = usuarioCriado.Id,
             Ativo = usuarioCriado.Ativo,
             Email = usuarioCriado.Email,
+            NomeUsuario = usuarioCriado.NomeUsuario,
             LastLoggedIn = usuarioCriado.LastLoggedIn
         };
 
@@ -107,7 +109,7 @@ public class UsuarioService : IUsuario
             Id = usuarioAtualizado.Id,
             Ativo = usuarioAtualizado.Ativo,
             Email = usuarioAtualizado.Email,
-            SenhaHash = usuarioAtualizado.SenhaHash,
+            NomeUsuario = usuarioAtualizado.NomeUsuario,
             LastLoggedIn = usuarioAtualizado.LastLoggedIn
         };
 
@@ -136,6 +138,7 @@ public class UsuarioService : IUsuario
             Id = usuarioRemover.Id,
             Ativo = usuarioRemover.Ativo,
             Email = usuarioRemover.Email,
+            NomeUsuario = usuarioRemover.NomeUsuario,
             SenhaHash = usuarioRemover.SenhaHash,
             LastLoggedIn = usuarioRemover.LastLoggedIn
         };
@@ -151,29 +154,40 @@ public class UsuarioService : IUsuario
         await _repositorio.DeleteAsync(usuarioRemover);
     }
 
-    public async Task<string?> LoginAsync(UsuarioLoginRequest request)
+    public async Task<(string? Token, UsuarioDTO? Usuario)> LoginAsync(UsuarioLoginRequest request)
     {
         var usuarios = await _repositorio.Get(q => q.Where(u => u.Email == request.Email));
         var usuario = usuarios.FirstOrDefault();
 
         if (usuario == null || usuario.Ativo == false)
         {
-            return null;
+            return (null, null);
         }
 
         bool senhaValida = BCrypt.Net.BCrypt.Verify(request.Senha, usuario.SenhaHash);
 
         if (!senhaValida)
         {
-            return null;
+            return (null, null);
         }
 
         usuario.LastLoggedIn = DateTime.Now;
-
         await _repositorio.UpdateAsync(usuario);
 
-        return GerarToken(usuario);
+        var token = GerarToken(usuario);
+
+        var dto = new UsuarioDTO
+        {
+            Id = usuario.Id,
+            Ativo = usuario.Ativo,
+            Email = usuario.Email,
+            NomeUsuario = usuario.NomeUsuario,
+            LastLoggedIn = usuario.LastLoggedIn
+        };
+
+        return (token, dto);
     }
+
 
     public string GerarToken(UsuarioModel usuario)
     {
@@ -184,7 +198,8 @@ public class UsuarioService : IUsuario
         var claims = new[]
         {
             new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
-            new Claim(ClaimTypes.Email, usuario.Email)
+            new Claim(ClaimTypes.Email, usuario.Email),
+            new Claim(ClaimTypes.Name, usuario.NomeUsuario)
         };
 
         var token = new JwtSecurityToken(

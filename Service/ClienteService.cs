@@ -3,6 +3,7 @@ using dotnetProject.Interfaces;
 using dotnetProject.Models;
 using dotnetProject.Repository;
 using LinqToDB.Data;
+using Microsoft.AspNetCore.Identity;
 
 namespace dotnetProject.Services;
 
@@ -112,7 +113,6 @@ public class ClienteService : ICliente
         {
             Tabela = "Cliente",
             TipoLog = TipoLogEnum.Cadastro,
-            Usuario = "teste",
             Campos = retornoDto.ToString()
         });
 

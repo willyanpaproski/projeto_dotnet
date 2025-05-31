@@ -15,6 +15,9 @@ public class UsuarioModel : EntidadeBase
     [Column("Email"), NotNull]
     public string? Email { get; set; }
 
+    [Column("NomeUsuario"), NotNull]
+    public string? NomeUsuario { get; set; }
+
     [Column("SenhaHash"), NotNull]
     public string? SenhaHash { get; set; }
 
@@ -25,6 +28,7 @@ public class UsuarioModel : EntidadeBase
     {
         Ativo = dto.Ativo;
         Email = dto.Email;
+        NomeUsuario = dto.NomeUsuario;
         SenhaHash = dto.SenhaHash;
         LastLoggedIn = dto.LastLoggedIn;
     }
@@ -34,6 +38,7 @@ public class UsuarioModel : EntidadeBase
         Id = dto.Id;
         Ativo = dto.Ativo;
         Email = dto.Email;
+        NomeUsuario = dto.NomeUsuario;
         SenhaHash = dto.SenhaHash;
         LastLoggedIn = dto.LastLoggedIn;
     }

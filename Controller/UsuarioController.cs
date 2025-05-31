@@ -79,6 +79,7 @@ public class UsuarioController : ControllerBase
             {
                 Ativo = request.Ativo,
                 Email = request.Email,
+                NomeUsuario = request.NomeUsuario,
                 SenhaHash = request.SenhaHash,
                 LastLoggedIn = request.LastLoggedIn
             };
@@ -125,6 +126,7 @@ public class UsuarioController : ControllerBase
             {
                 Ativo = request.Ativo,
                 Email = request.Email,
+                NomeUsuario = request.NomeUsuario,
                 SenhaHash = request.SenhaHash,
                 LastLoggedIn = request.LastLoggedIn
             };
@@ -186,7 +188,7 @@ public class UsuarioController : ControllerBase
 
             var usuario = await _usuarioService.LoginAsync(request);
 
-            if (usuario == null)
+            if (usuario.Usuario == null)
             {
                 return Unauthorized("Email ou senha inválidos!");
             }
@@ -194,7 +196,8 @@ public class UsuarioController : ControllerBase
             return Ok(new
             {
                 Message = "Login realizado com sucesso!",
-                Token = usuario
+                usuario.Token,
+                usuario.Usuario
             });
         }
         catch (Exception ex)
