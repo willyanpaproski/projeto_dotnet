@@ -1,16 +1,20 @@
 using System.ComponentModel.DataAnnotations;
 using dotnetProject.Enums;
+using dotnetProject.Models;
 using dotnetProject.Utils;
 
 namespace dotnetProject.Request;
 
 public class ClienteRequest
 {
+    public long? Id { get; set; }
+
     [Required(ErrorMessage = "Ativo deve ser marcado!")]
     public bool Ativo { get; set; }
 
     [Required(AllowEmptyStrings = false, ErrorMessage = "Nome deve ser preenchido!")]
     [StringLength(100, ErrorMessage = "Nome deve ter no máximo 100 caracteres!")]
+    [UniqueValue<ClienteModel>("Nome", "Id", ErrorMessage = "Este nome já está em uso.")]
     public string? Nome { get; set; }
 
     [Required(ErrorMessage = "CPF/CNPJ deve ser preenchido!")]
@@ -23,12 +27,15 @@ public class ClienteRequest
     public TipoPessoaEnum TipoPessoa { get; set; }
 
     [EmailOptional(ErrorMessage = "Email inválido.")]
+    [UniqueValue<ClienteModel>("Email", "Id", ErrorMessage = "Este email já está em uso.")]
     public string? Email { get; set; }
 
     [StringCharacters(11, ErrorMessage = "Telefone deve ter 11 dígitos!")]
+    [UniqueValue<ClienteModel>("Telefone", "Id", ErrorMessage = "Este número de telefone já está em uso.")]
     public string? Telefone { get; set; }
 
     [StringCharacters(11, ErrorMessage = "Celular deve ter 11 dígitos!")]
+    [UniqueValue<ClienteModel>("Celular", "Id", ErrorMessage = "Este número de celular já está em uso.")]
     public string? Celular { get; set; }
 
     [Required(ErrorMessage = "CEP deve ser preenchido!")]

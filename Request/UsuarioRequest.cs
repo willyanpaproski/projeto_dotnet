@@ -13,10 +13,11 @@ public class UsuarioRequest
 
     [Required(ErrorMessage = "Email deve ser preenchido!")]
     [EmailAddress(ErrorMessage = "Email inválido!")]
-    [UniqueValue<UsuarioModel>("Email", "Id", ErrorMessage = "Este email já está em uso")]
+    [UniqueValue<UsuarioModel>("Email", "Id", ErrorMessage = "Este email já está em uso.")]
     public string? Email { get; set; }
 
     [Required(ErrorMessage = "Nome de usuário deve ser preenchido!")]
+    [UniqueValue<UsuarioModel>("NomeUsuario", "Id", ErrorMessage = "Este nome de usuário já está em uso.")]
     public string? NomeUsuario { get; set; }
 
     [Required(ErrorMessage = "Senha deve ser preenchida!")]
