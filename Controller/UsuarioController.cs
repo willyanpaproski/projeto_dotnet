@@ -2,6 +2,7 @@ using dotnetProject.Dto;
 using dotnetProject.Interfaces;
 using dotnetProject.Request;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace dotnetProject.Controller;
 
@@ -81,7 +82,7 @@ public class UsuarioController : ControllerBase
                 Email = request.Email,
                 NomeUsuario = request.NomeUsuario,
                 SenhaHash = request.SenhaHash,
-                LastLoggedIn = request.LastLoggedIn
+                LastLoggedIn = request.LastLoggedIn ?? default
             };
 
             var usuarioCriado = await _usuarioService.Criar(dto);
@@ -124,11 +125,12 @@ public class UsuarioController : ControllerBase
 
             var dto = new UsuarioDTO
             {
+                Id = Id,
                 Ativo = request.Ativo,
                 Email = request.Email,
                 NomeUsuario = request.NomeUsuario,
                 SenhaHash = request.SenhaHash,
-                LastLoggedIn = request.LastLoggedIn
+                LastLoggedIn = request.LastLoggedIn ?? default
             };
 
             var usuarioAtualizado = await _usuarioService.Atualizar(Id, dto);

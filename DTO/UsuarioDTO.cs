@@ -7,7 +7,7 @@ public record UsuarioDTO
     public string? Email { get; set; }
     public string? NomeUsuario { get; set; }
     public string? SenhaHash { get; set; }
-    public DateTime LastLoggedIn { get; set; }
+    public DateTime? LastLoggedIn { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 }

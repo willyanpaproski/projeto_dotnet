@@ -19,7 +19,8 @@ public class RepositorioGenerico<T> where T : EntidadeBase
     {
         var query = _conexao.GetTable<T>().AsQueryable();
 
-        if (filter != null) {
+        if (filter != null)
+        {
             query = filter(query);
         }
 
@@ -55,7 +56,8 @@ public class RepositorioGenerico<T> where T : EntidadeBase
         return result;
     }
 
-    public async Task<T> CreateAsync(T entidade) {
+    public async Task<T> CreateAsync(T entidade)
+    {
         var now = DateTime.Now;
         entidade.CreatedAt = now;
         entidade.UpdatedAt = now;
@@ -66,20 +68,63 @@ public class RepositorioGenerico<T> where T : EntidadeBase
         .FirstOrDefault(p => p.GetCustomAttribute<LinqToDB.Mapping.PrimaryKeyAttribute>() != null ||
         p.GetCustomAttribute<LinqToDB.Mapping.ColumnAttribute>()?.IsPrimaryKey == true);
 
-        if (keyProperty != null && id != null) {
+        if (keyProperty != null && id != null)
+        {
             keyProperty.SetValue(entidade, Convert.ChangeType(id, keyProperty.PropertyType));
         }
 
         return entidade;
     }
 
-    public async Task UpdateAsync(T entidade) {
+    public async Task UpdateAsync(T entidade)
+    {
         var now = DateTime.Now;
         entidade.UpdatedAt = now;
         await _conexao.UpdateAsync<T>(entidade);
     }
 
-    public async Task DeleteAsync(T entidade) {
+    public async Task DeleteAsync(T entidade)
+    {
         await _conexao.DeleteAsync<T>(entidade);
     }
+
+    public async Task<bool> CampoExistenteAsync<TProperty>(string nomePropriedade, TProperty? valor, long? idIgnorar = null)
+    {
+        var table = _conexao.GetTable<T>();
+
+        var parametro = Expression.Parameter(typeof(T), "x");
+        var propriedade = Expression.PropertyOrField(parametro, nomePropriedade);
+        var constanteValor = Expression.Constant(valor, typeof(TProperty));
+        var igualdade = Expression.Equal(propriedade, constanteValor);
+
+        Expression<Func<T, bool>>? lambdaFinal;
+
+        if (idIgnorar.HasValue)
+        {
+            var propId = typeof(T).GetProperties().FirstOrDefault(
+                p => p.GetCustomAttribute<LinqToDB.Mapping.PrimaryKeyAttribute>() != null ||
+                p.GetCustomAttribute<LinqToDB.Mapping.ColumnAttribute>()?.IsPrimaryKey == true
+            );
+
+            if (propId == null)
+            {
+                throw new InvalidOperationException("Entidade não possui uma chave primária definida.");
+            }
+
+            var idProperty = Expression.Property(parametro, propId);
+            var idConstante = Expression.Constant(idIgnorar.Value, typeof(long));
+            var diferenteId = Expression.NotEqual(idProperty, idConstante);
+
+            var and = Expression.AndAlso(igualdade, diferenteId);
+
+            lambdaFinal = Expression.Lambda<Func<T, bool>>(and, parametro);
+        }
+        else
+        {
+            lambdaFinal = Expression.Lambda<Func<T, bool>>(igualdade, parametro);
+        }
+
+        return await table.AnyAsync(lambdaFinal);
+    }
+
 }

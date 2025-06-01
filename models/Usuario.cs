@@ -22,7 +22,7 @@ public class UsuarioModel : EntidadeBase
     public string? SenhaHash { get; set; }
 
     [Column("LastLoggedIn")]
-    public DateTime LastLoggedIn { get; set; }
+    public DateTime? LastLoggedIn { get; set; }
 
     public void CriarModel(UsuarioCreateDTO dto)
     {
