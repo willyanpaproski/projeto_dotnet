@@ -22,6 +22,7 @@ public record ClienteDTO
     public string? Complemento { get; set; }
     public long? EmpresaId { get; set; }
     public long? FilialId { get; set; }
+    public string? Observacoes { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 }

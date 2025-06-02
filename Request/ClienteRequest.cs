@@ -50,6 +50,7 @@ public class ClienteRequest
     public string? Estado { get; set; }
     public string? Rua { get; set; }
     public string? Complemento { get; set; }
+    public string? Observacoes { get; set; }
 
     [Required(ErrorMessage = "Empresa deve ser preenchido!")]
     public long? EmpresaId { get; set; }

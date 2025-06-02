@@ -54,6 +54,9 @@ public class ClienteModel : EntidadeBase
 
     [Column("Complemento")]
     public string? Complemento { get; set; }
+
+    [Column("Observacoes")]
+    public string? Observacoes { get; set; }
     
     [Column("EmpresaId"), NotNull]
     public long? EmpresaId { get; set; }
@@ -85,6 +88,7 @@ public class ClienteModel : EntidadeBase
         Estado = dto.Estado;
         Rua = dto.Rua;
         Complemento = dto.Complemento;
+        Observacoes = dto.Observacoes;
         EmpresaId = dto.EmpresaId;
         FilialId = dto.FilialId;
     }
@@ -106,6 +110,7 @@ public class ClienteModel : EntidadeBase
         Estado = dto.Estado;
         Rua = dto.Rua;
         Complemento = dto.Complemento;
+        Observacoes = dto.Observacoes;
         EmpresaId = dto.EmpresaId;
         FilialId = dto.FilialId;
     }

@@ -40,6 +40,8 @@ public class ClienteQuery
         FiltroOperador? ruaOperador = null,
         string? complemento = null,
         FiltroOperador? complementoOperador = null,
+        string? observacoes = null,
+        FiltroOperador? observacoesOperador = null,
         long? empresaId = null,
         FiltroOperador? empresaIdOperador = null,
         long? filialId = null,
@@ -71,6 +73,7 @@ public class ClienteQuery
             .FiltrarString(estado, estadoOperador, c => c.Estado)
             .FiltrarString(rua, ruaOperador, c => c.Rua)
             .FiltrarString(complemento, complementoOperador, c => c.Complemento)
+            .FiltrarString(observacoes, observacoesOperador, c => c.Observacoes)
             .FiltrarLong(empresaId, empresaIdOperador, c => c.EmpresaId)
             .FiltrarLong(filialId, filialIdOperador, c => c.FilialId)
             .FiltrarDateTime(createdAt, createdAtOperador, c => c.CreatedAt)

@@ -92,6 +92,7 @@ public class ClienteController : ControllerBase
                 Estado = request.Estado,
                 Rua = request.Rua,
                 Complemento = request.Complemento,
+                Observacoes = request.Observacoes,
                 EmpresaId = request.EmpresaId,
                 FilialId = request.FilialId
             };
@@ -152,6 +153,7 @@ public class ClienteController : ControllerBase
                 Estado = request.Estado,
                 Rua = request.Rua,
                 Complemento = request.Complemento,
+                Observacoes = request.Observacoes,
                 EmpresaId = request.EmpresaId,
                 FilialId = request.FilialId
             };
