@@ -28,13 +28,4 @@ public class LogModel : EntidadeBase
         Usuario = dto.Usuario;
         Campos = dto.Campos;
     }
-
-    public void AtualizarModel(LogDTO dto)
-    {
-        Id = dto.Id;
-        Tabela = dto.Tabela;
-        TipoLog = dto.TipoLog;
-        Usuario = dto.Usuario;
-        Campos = dto.Campos;
-    }
 }

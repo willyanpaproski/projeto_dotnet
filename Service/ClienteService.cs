@@ -3,7 +3,6 @@ using dotnetProject.Interfaces;
 using dotnetProject.Models;
 using dotnetProject.Repository;
 using LinqToDB.Data;
-using Microsoft.AspNetCore.Identity;
 
 namespace dotnetProject.Services;
 

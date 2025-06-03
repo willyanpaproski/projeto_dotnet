@@ -16,12 +16,15 @@ builder.Services.AddScoped<DataConnection, LinqToDbDataConnection>();
 builder.Services.AddScoped(typeof(RepositorioGenerico<>), typeof(RepositorioGenerico<>));
 builder.Services.AddScoped<ClienteRepository>();
 builder.Services.AddScoped<FilialRepository>();
+builder.Services.AddScoped<LogAcessoRepository>();
 builder.Services.AddScoped<ICliente, ClienteService>();
 builder.Services.AddScoped<IEmpresa, EmpresaService>();
 builder.Services.AddScoped<IFilial, FilialService>();
 builder.Services.AddScoped<ILog, LogService>();
 builder.Services.AddScoped<LogService>();
 builder.Services.AddScoped<IUsuario, UsuarioService>();
+builder.Services.AddScoped<ILogAcesso, LogAcessoService>();
+builder.Services.AddScoped<LogAcessoService>();
 
 builder.Services.AddCors(options =>
 {

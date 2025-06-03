@@ -19,14 +19,14 @@ public class LogService : ILog
     {
         var logs = await _repositorio.Get();
 
-        return logs.OrderByDescending(l => l.Id).Select(c => new LogDTO
+        return logs.OrderByDescending(l => l.Id).Select(l => new LogDTO
         {
-            Id = c.Id,
-            Tabela = c.Tabela ?? "",
-            TipoLog = c.TipoLog,
-            Usuario = c.Usuario ?? "",
-            Campos = c.Campos ?? "",
-            CreatedAt = c.CreatedAt
+            Id = l.Id,
+            Tabela = l.Tabela ?? "",
+            TipoLog = l.TipoLog,
+            Usuario = l.Usuario ?? "",
+            Campos = l.Campos ?? "",
+            CreatedAt = l.CreatedAt
         });
     }
 

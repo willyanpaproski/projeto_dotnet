@@ -15,11 +15,13 @@ public class UsuarioService : IUsuario
 {
     private readonly RepositorioGenerico<UsuarioModel> _repositorio;
     public LogService _logService;
+    public LogAcessoService _logAcessoService;
 
-    public UsuarioService(DataConnection conexao, LogService logService)
+    public UsuarioService(DataConnection conexao, LogService logService, LogAcessoService logAcessoService)
     {
         _repositorio = new RepositorioGenerico<UsuarioModel>(conexao);
         _logService = logService;
+        _logAcessoService = logAcessoService;
     }
 
     public async Task<IEnumerable<UsuarioDTO>> ListarTodos()
@@ -184,6 +186,12 @@ public class UsuarioService : IUsuario
             NomeUsuario = usuario.NomeUsuario,
             LastLoggedIn = usuario.LastLoggedIn
         };
+
+        await _logAcessoService.Criar(new LogAcessoCreateDTO
+        {
+            TipoLogAcesso = TipoLogAcessoEnum.Acesso,
+            UsuarioId = usuario.Id
+        });
 
         return (token, dto);
     }

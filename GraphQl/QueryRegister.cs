@@ -7,5 +7,6 @@ namespace dotnetProject.GraphQl
         public FilialQuery FilialQuery { get; set; } = new FilialQuery();
         public LogQuery LogQuery { get; set; } = new LogQuery();
         public UsuarioQuery UsuarioQuery { get; set; } = new UsuarioQuery();
+        public LogAcessoQuery LogAcessoQuery { get; set; } = new LogAcessoQuery();
     }
 }

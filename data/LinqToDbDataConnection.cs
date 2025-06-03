@@ -14,4 +14,5 @@ public class LinqToDbDataConnection : DataConnection
     public ITable<FilialModel> FilialModels => this.GetTable<FilialModel>();
     public ITable<LogModel> LogModels => this.GetTable<LogModel>();
     public ITable<UsuarioModel> UsuarioModels => this.GetTable<UsuarioModel>();
+    public ITable<LogAcessoModel> LogAcessoModels => this.GetTable<LogAcessoModel>();
 }
